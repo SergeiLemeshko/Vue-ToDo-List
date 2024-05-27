@@ -1,26 +1,32 @@
 <template>
-  <div v-if="isModalOpen" class="modal-overlay">
+  <div v-if="isModalOpen || isEditModal" class="modal-overlay">
     <div class="modal-content">
       <h3>{{ title }}</h3>
       <form @submit.prevent="submitForm">
         <div>
-          <label for="name">Имя</label>
-          <input v-model="name" id="name" type="text" required />
+          <label for="name">Название</label>
+          <input 
+          v-model="name" 
+          id="name" 
+          type="text" 
+          required
+          :class="{ 'is-invalid': !isNameValid }"
+          />
         </div>
         <div>
           <label for="description">Описание</label>
-          <input v-model="description" id="description" type="text" required />
+          <input v-model="description" id="description" type="text" />
         </div>
         <div>
           <label for="category">Категория</label>
-          <!-- <input v-model="categoryId" id="category" required /> -->
-          <select v-model="categoryId" id="category" required>
+          <select v-model="categoryId" id="category">
+            <option :value="null">Не выбрана</option>
             <option v-for="category in categories" :key="category.id" :value="category.id">
               {{ category.name }}
             </option>
           </select>
         </div>
-        <button type="submit">Создать</button>
+        <button type="submit">{{ nameBtn }}</button>
         <button type="button" @click="closeTodoModal">Закрыть</button>
       </form>
     </div>
@@ -29,7 +35,7 @@
 
 <script lang="ts">
 import { storeToRefs } from 'pinia'
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useModalTodoStore } from '../store/useModalTodoStore';
 import { Category } from "../store/useTodoListStore";
 import { useTodoListStore } from "../store/useTodoListStore";
@@ -38,6 +44,10 @@ export default defineComponent({
   name: 'ModalTodo',
   props: {
     title: {
+      type: String,
+      required: true,
+    },
+    nameBtn: {
       type: String,
       required: true,
     },
@@ -54,7 +64,7 @@ export default defineComponent({
 
     const modalStore = useModalTodoStore();
     const { closeModal } = modalStore;
-    const { isModalOpen } = storeToRefs(modalStore);
+    const { isModalOpen, isEditModal } = storeToRefs(modalStore);
 
     const store = useTodoListStore();
     const { fetchTasks } = store;
@@ -69,7 +79,7 @@ export default defineComponent({
         props.onSubmit({
           name: name.value,
           description: description.value,
-          categoryId: categoryId.value,
+          categoryId: categoryId.value || 0,
         });
         closeModal();
         clearFieldsTodoModal();
@@ -85,15 +95,18 @@ export default defineComponent({
       name.value = '',
       description.value = '',
       categoryId.value = null
-      // categoryId.value = ''
     };
+
+    const isNameValid = computed(() => name.value.length <= 255);
 
     return {
       name,
       description,
       categoryId,
       isModalOpen,
+      isEditModal,
       categories,
+      isNameValid,
       submitForm,
       closeModal,
       closeTodoModal,
@@ -121,5 +134,9 @@ export default defineComponent({
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+}
+
+.is-invalid {
+  border-color: #dc3545;
 }
 </style>

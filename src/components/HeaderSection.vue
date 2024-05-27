@@ -16,6 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
+import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
 import ButtonAdd from '@/UI/ButtonAdd.vue';
 import { useModalTodoStore } from '../store/useModalTodoStore'
@@ -27,10 +28,11 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
-    const todoStore = useModalTodoStore()
+    const modalStore = useModalTodoStore();
+    const { isModalOpen } = storeToRefs(modalStore);
 
-      const openModal = () => {
-      todoStore.openModal();
+    const openModal = () => {
+      modalStore.openModal(isModalOpen.value);
     }
 
     //для отображения кнопок Добавить задачу/Добавить категорию
@@ -38,6 +40,7 @@ export default defineComponent({
 
     return { 
       currentBtn,
+      isModalOpen,
       openModal,
     }
   },

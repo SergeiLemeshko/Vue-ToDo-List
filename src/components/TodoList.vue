@@ -2,9 +2,9 @@
   <div>
     <ul>
       <li v-for="todo in todos" :key="todo.id">
-        <div class="test">{{ todo.id }}-{{ todo.name }}-{{ todo.description }}-{{ todo.categoryName }}</div> 
-        <button  @click="confirmRemoveTask(todo.id)">Удалить</button>
-        <button @click="editTask(todo)">Редактировать</button>
+        <div class="test">{{ "Название: " + todo.name }};  {{ "Описание: " + todo.description }};  {{ "Категория: " + todo.categoryName }}</div> 
+        <button @click="confirmRemoveTask(todo.id)">Удалить</button>
+        <button @click="openModal()">Редактировать</button>
       </li>
     </ul>
     <ModalDelete
@@ -15,15 +15,25 @@
       :onCancel="cancelRemoveTask"
     />
     <ModalTodo
+      v-if="isModalOpen"
       title="Создание задачи"
+      nameBtn="Создать"
       :onSubmit="createTask"
+    />
+    <ModalTodo
+      v-if="isEditModal"
+      title="Редактирование задачи"
+      nameBtn="Сохранить"
+      :onSubmit="editTask"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import { storeToRefs } from 'pinia'
 import { useTodoListStore } from "../store/useTodoListStore";
+import { useModalTodoStore } from '../store/useModalTodoStore'
 import { Task, Category } from "../store/useTodoListStore";
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalTodo from '@/UI/ModalTodo.vue';
@@ -36,7 +46,10 @@ export default defineComponent({
   },
   setup() {
     const store = useTodoListStore();
-    const { fetchTasks, updateTask, addTask, deleteTask } = store;
+    const modalStore = useModalTodoStore();
+    const { fetchTasks, updateTask, addTask, deleteTask, displayCategories } = store;
+    const { isModalOpen, isEditModal } = storeToRefs(modalStore);
+
     const todos = ref<Task[]>([]);
     const categories = ref<Category[]>([]);
     const taskIdToDelete = ref<number | null>(null);
@@ -45,20 +58,14 @@ export default defineComponent({
     onMounted(async () => {
       todos.value = await fetchTasks("/GetTasks");
       categories.value = await fetchTasks("/GetCategories");
+      displayCategories(todos.value, categories.value);
     });
 
     //---создание---------------------------
     const createTask = async (newTask: Omit<Task, 'id'>) => {
       const addedTask = await addTask(newTask, "/AddTask");
       todos.value.push(addedTask);
-      
-      todos.value.forEach(todo => {
-        const category = categories.value.find(c => c.id === todo.categoryId);
-        if (category) {
-          todo.categoryName = category.name;
-        }
-      });
-      console.log(todos.value, 'todos.value')
+      displayCategories(todos.value, categories.value);
     };
 
     //---удаление---------------------------
@@ -79,24 +86,31 @@ export default defineComponent({
       taskIdToDelete.value = null;
     };
 
-    //---редактирование(пока не реализовано)---------------------------
-    const editTask = async (task: Task) => {
-      // const updatedTask = { ...task, completed: !task.completed }; // Добавить/удалить свойство по необходимости
-      const updatedTask = { ...task }; // Добавить/удалить свойство по необходимости
+    //---редактирование(500 ошибка)---------------------------
+    const editTask = async (updatedTask: Task) => {
       const responseTask = await updateTask(updatedTask, "/UpdateTask");
-      const index = todos.value.findIndex(t => t.id === task.id);
-      todos.value[index] = responseTask;
+      const index = todos.value.findIndex(t => t.id === updatedTask.id);
+      if (index !== -1) {
+        todos.value[index] = responseTask;
+      }
+    };
+
+    const openModal = () => {
+      modalStore.openModal(true);
     };
 
     return {
       todos,
       taskIdToDelete,
       confirmModal,
+      isModalOpen, 
+      isEditModal,
       createTask,
       editTask,
       removeTask,
       confirmRemoveTask,
       cancelRemoveTask,
+      openModal,
     };
   },
 });

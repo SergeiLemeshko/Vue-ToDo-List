@@ -16,6 +16,7 @@ export interface Category {
 }
 
 export const useTodoListStore = defineStore("todoList", () => {
+  
     const BASE_URL = ref("http://localhost:8089/api/ToDoList");
 
     const fetchTasks = async (path: string): Promise<Task[]> => {
@@ -65,5 +66,15 @@ export const useTodoListStore = defineStore("todoList", () => {
       }
     };
 
-    return { BASE_URL, fetchTasks, addTask, updateTask, deleteTask }
+    const displayCategories = (todos: Task[], categories: Category[]): void => {
+      todos.forEach(todo => {
+        const category = categories.find(c => c.id === todo.categoryId);
+        if (category) {
+          todo.categoryName = category.name;
+          todos.sort((a, b) => a.id - b.id);
+        } else todo.categoryName = '';
+      });
+    };
+
+    return { BASE_URL, fetchTasks, addTask, updateTask, deleteTask, displayCategories }
 });
