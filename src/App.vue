@@ -1,30 +1,33 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <HeaderSection/>
   <router-view/>
 </template>
 
+<script lang="ts">
+import { defineComponent } from "vue";
+import HeaderSection from "@/components/HeaderSection.vue";
+
+export default defineComponent({
+  name: "App",
+  components: {
+    HeaderSection,
+  },
+});
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-nav {
-  padding: 30px;
+#app {
+  text-align: center;
+  font-family: Roboto;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+body {
+  background-color: #2e3130;
 }
 </style>
