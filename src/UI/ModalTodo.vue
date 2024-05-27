@@ -17,7 +17,7 @@
           <label for="description">Описание</label>
           <input v-model="description" id="description" type="text" />
         </div>
-        <div>
+        <div v-if="currentPage">
           <label for="category">Категория</label>
           <select v-model="categoryId" id="category">
             <option :value="null">Не выбрана</option>
@@ -36,6 +36,7 @@
 <script lang="ts">
 import { storeToRefs } from 'pinia'
 import { defineComponent, ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router'
 import { useModalTodoStore } from '../store/useModalTodoStore';
 import { Category } from "../store/useTodoListStore";
 import { useTodoListStore } from "../store/useTodoListStore";
@@ -62,6 +63,7 @@ export default defineComponent({
     const categoryId = ref<number | null>(null);
     const categories = ref<Category[]>([]);
 
+    const route = useRoute();
     const modalStore = useModalTodoStore();
     const { closeModal } = modalStore;
     const { isModalOpen, isEditModal } = storeToRefs(modalStore);
@@ -97,6 +99,8 @@ export default defineComponent({
       categoryId.value = null
     };
 
+    const currentPage = computed(() => route.path === "/todo");
+
     const isNameValid = computed(() => name.value.length <= 255);
 
     return {
@@ -107,6 +111,7 @@ export default defineComponent({
       isEditModal,
       categories,
       isNameValid,
+      currentPage,
       submitForm,
       closeModal,
       closeTodoModal,

@@ -66,6 +66,7 @@ export const useTodoListStore = defineStore("todoList", () => {
       }
     };
 
+    // перенести в useCategorieListStore
     const displayCategories = (todos: Task[], categories: Category[]): void => {
       todos.forEach(todo => {
         const category = categories.find(c => c.id === todo.categoryId);
