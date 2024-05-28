@@ -8,7 +8,7 @@
 import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
-  name: 'ButtonAdd',
+  name: 'ButtonMain',
   props: {
     onClick: {
       type: Function as PropType<() => void>,
@@ -16,9 +16,10 @@ export default defineComponent({
     }
   },
   setup(props) {
-    function handleClick() {
+    // для обработки клика по кнопке
+    const handleClick = () => {
       props.onClick();
-    }
+    };
 
     return { handleClick }
   }

@@ -9,16 +9,11 @@ export interface Task {
   categoryName?: string;
 }
 
-export interface Category {
-  id: number;
-  name: string;
-  description: string;
-}
-
 export const useTodoListStore = defineStore("todoList", () => {
   
-    const BASE_URL = ref("http://localhost:8089/api/ToDoList");
+    const BASE_URL = ref<string>("http://localhost:8089/api/ToDoList");
 
+    // получение задач
     const fetchTasks = async (path: string): Promise<Task[]> => {
       const response = await fetch(`${BASE_URL.value + path}`);
       if (!response.ok) {
@@ -27,6 +22,7 @@ export const useTodoListStore = defineStore("todoList", () => {
       return response.json();
     };
     
+    // добавление задач
     const addTask = async (newTask: Omit<Task, 'id'>, path: string): Promise<Task> => {
       const response = await fetch(`${BASE_URL.value + path}`, {
         method: 'POST',
@@ -42,6 +38,7 @@ export const useTodoListStore = defineStore("todoList", () => {
       return response.json();
     };
     
+    // обновление задач
     const updateTask = async (updatedTask: Task, path: string): Promise<Task> => {
       const response = await fetch(`${BASE_URL.value + path}`, {
         method: 'POST',
@@ -57,6 +54,7 @@ export const useTodoListStore = defineStore("todoList", () => {
       return response.json();
     };
     
+    // удаление задач
     const deleteTask = async (taskId: number,  path: string): Promise<void> => {
       const response = await fetch(`${BASE_URL.value + path}${taskId}`, {
         method: 'GET'
@@ -66,16 +64,5 @@ export const useTodoListStore = defineStore("todoList", () => {
       }
     };
 
-    // перенести в useCategorieListStore
-    const displayCategories = (todos: Task[], categories: Category[]): void => {
-      todos.forEach(todo => {
-        const category = categories.find(c => c.id === todo.categoryId);
-        if (category) {
-          todo.categoryName = category.name;
-          todos.sort((a, b) => a.id - b.id);
-        } else todo.categoryName = '';
-      });
-    };
-
-    return { BASE_URL, fetchTasks, addTask, updateTask, deleteTask, displayCategories }
+    return { BASE_URL, fetchTasks, addTask, updateTask, deleteTask }
 });

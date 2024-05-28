@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" class="modal-overlay">
+  <div v-if="isVisible" class="modal-overlay">
     <div class="modal-content">
       <h3>{{ title }}</h3>
       <p>{{ message }}</p>
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, PropType } from 'vue';
 
 export default defineComponent({
   name: 'ModalDelete',
@@ -24,37 +24,37 @@ export default defineComponent({
       required: true,
     },
     onConfirm: {
-      type: Function,
+      type: Function as PropType<() => void>,
       required: true,
     },
     onCancel: {
-      type: Function,
+      type: Function as PropType<() => void>,
       required: true,
     },
   },
   setup(props) {
-    const visible = ref(false);
+    const isVisible = ref<boolean>(false);
 
-    const show = () => {
-      visible.value = true;
+    const show = (): void => {
+      isVisible.value = true;
     };
 
-    const hide = () => {
-      visible.value = false;
+    const hide = (): void => {
+      isVisible.value = false;
     };
 
-    const confirm = () => {
+    const confirm = (): void => {
       props.onConfirm();
       hide();
     };
 
-    const cancel = () => {
+    const cancel = (): void => {
       props.onCancel();
       hide();
     };
 
     return {
-      visible,
+      isVisible,
       show,
       hide,
       confirm,

@@ -4,7 +4,7 @@
       <li v-for="cat in categories" :key="cat.id">
         <div class="test">{{ "Название: " + cat.name }};  {{ "Описание: " + cat.description }}</div> 
         <button @click="confirmRemoveCategorie(cat.id)">Удалить</button>
-        <button @click="openModal()">Редактировать</button>
+        <button @click="openMainModal()">Редактировать</button>
       </li>
     </ul>
     <ModalDelete
@@ -14,14 +14,14 @@
       :onConfirm="removeCategorie"
       :onCancel="cancelRemoveCategorie"
     />
-    <ModalTodo
+    <ModalMain
       v-if="isModalOpen"
       title="Создание категории"
       nameBtn="Создать"
       :onSubmit="createCategorie"
     />
-    <ModalTodo
-      v-if="isEditModal"
+    <ModalMain
+      v-if="isEditModalOpen"
       title="Редактирование категории"
       nameBtn="Сохранить"
       :onSubmit="editCategory"
@@ -31,50 +31,45 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { storeToRefs } from 'pinia'
-import { useCategorieListStore } from "../store/useCategorieListStore";
-import { useModalTodoStore } from '../store/useModalTodoStore'
-import { Category } from "../store/useTodoListStore";
+import { storeToRefs } from 'pinia';
+import { useCategorieListStore, Category } from "../store/useCategorieListStore";
+import { useModalMainStore } from '../store/useModalMainStore';
 import ModalDelete from '@/UI/ModalDelete.vue';
-import ModalTodo from '@/UI/ModalTodo.vue';
+import ModalMain from '@/UI/ModalMain.vue';
 
 export default defineComponent({
   name: "CategoriesList",
   components: {
     ModalDelete,
-    ModalTodo,
+    ModalMain,
   },
   setup() {
     const store = useCategorieListStore();
-    const modalStore = useModalTodoStore();
+    const modalStore = useModalMainStore();
     const { fetchCategorie, updateCategorie, addCategorie, deleteCategorie } = store;
-    const { isModalOpen, isEditModal } = storeToRefs(modalStore);
+    const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
 
-    // const todos = ref<Task[]>([]);
     const categories = ref<Category[]>([]);
     const categorieIdToDelete = ref<number | null>(null);
     const confirmModal = ref<InstanceType<typeof ModalDelete> | null>(null);
 
     onMounted(async () => {
-      // todos.value = await fetchTasks("/GetTasks");
       categories.value = await fetchCategorie("/GetCategories");
-      // displayCategories(todos.value, categories.value);
     });
 
-    
-    //---создание---------------------------
+    // создание категории
     const createCategorie = async (newCategorie: Omit<Category, 'id'>) => {
       const addedCategorie = await addCategorie(newCategorie, "/AddCategory");
       categories.value.push(addedCategorie);
-      // displayCategories(todos.value, categories.value);
     };
 
-    //---удаление---------------------------
+    // получаем id категории и показываем модальное окно
     const confirmRemoveCategorie = (categorieId: number) => {
       categorieIdToDelete.value = categorieId;
       confirmModal.value?.show();
     };
 
+    // удаление категории
     const removeCategorie = async () => {
       if (categorieIdToDelete.value !== null) {
         await deleteCategorie(categorieIdToDelete.value, "/RemoveCategory/");
@@ -87,7 +82,7 @@ export default defineComponent({
       categorieIdToDelete.value = null;
     };
 
-      //---редактирование(500 ошибка)---------------------------
+      // редактирование категории
       const editCategory = async (updatedCategory: Category) => {
       const responseCategory = await updateCategorie(updatedCategory, "/categories");
       const index = categories.value.findIndex(cat => cat.id === updatedCategory.id);
@@ -96,13 +91,14 @@ export default defineComponent({
       }
     };
 
-    const openModal = () => {
-      modalStore.openModal(true);
+    // показываем модальное окно редактирования
+    const openMainModal = () => {
+      modalStore.openMainModal(true);
     };
 
     return { 
       isModalOpen,
-      isEditModal,
+      isEditModalOpen,
       categories,
       confirmModal,
       fetchCategorie, 
@@ -114,7 +110,7 @@ export default defineComponent({
       removeCategorie,
       cancelRemoveCategorie,
       editCategory,
-      openModal,
+      openMainModal,
     };
   },
 });

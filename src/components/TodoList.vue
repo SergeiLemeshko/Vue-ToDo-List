@@ -4,7 +4,7 @@
       <li v-for="todo in todos" :key="todo.id">
         <div class="test">{{ "Название: " + todo.name }};  {{ "Описание: " + todo.description }};  {{ "Категория: " + todo.categoryName }}</div> 
         <button @click="confirmRemoveTask(todo.id)">Удалить</button>
-        <button @click="openModal()">Редактировать</button>
+        <button @click="openMainModal()">Редактировать</button>
       </li>
     </ul>
     <ModalDelete
@@ -14,14 +14,14 @@
       :onConfirm="removeTask"
       :onCancel="cancelRemoveTask"
     />
-    <ModalTodo
+    <ModalMain
       v-if="isModalOpen"
       title="Создание задачи"
       nameBtn="Создать"
       :onSubmit="createTask"
     />
-    <ModalTodo
-      v-if="isEditModal"
+    <ModalMain
+      v-if="isEditModalOpen"
       title="Редактирование задачи"
       nameBtn="Сохранить"
       :onSubmit="editTask"
@@ -31,24 +31,26 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { storeToRefs } from 'pinia'
-import { useTodoListStore } from "../store/useTodoListStore";
-import { useModalTodoStore } from '../store/useModalTodoStore'
-import { Task, Category } from "../store/useTodoListStore";
+import { storeToRefs } from 'pinia';
+import { useTodoListStore, Task } from "../store/useTodoListStore";
+import { useModalMainStore } from '../store/useModalMainStore';
+import { useCategorieListStore, Category } from "../store/useCategorieListStore";
 import ModalDelete from '@/UI/ModalDelete.vue';
-import ModalTodo from '@/UI/ModalTodo.vue';
+import ModalMain from '@/UI/ModalMain.vue';
 
 export default defineComponent({
   name: 'TodoList',
   components: {
     ModalDelete,
-    ModalTodo,
+    ModalMain,
   },
   setup() {
     const store = useTodoListStore();
-    const modalStore = useModalTodoStore();
-    const { fetchTasks, updateTask, addTask, deleteTask, displayCategories } = store;
-    const { isModalOpen, isEditModal } = storeToRefs(modalStore);
+    const modalStore = useModalMainStore();
+    const storeCategorie = useCategorieListStore();
+    const { fetchTasks, updateTask, addTask, deleteTask } = store;
+    const { displayCategories } = storeCategorie;
+    const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
 
     const todos = ref<Task[]>([]);
     const categories = ref<Category[]>([]);
@@ -61,19 +63,20 @@ export default defineComponent({
       displayCategories(todos.value, categories.value);
     });
 
-    //---создание---------------------------
+    // создание задачи
     const createTask = async (newTask: Omit<Task, 'id'>) => {
       const addedTask = await addTask(newTask, "/AddTask");
       todos.value.push(addedTask);
       displayCategories(todos.value, categories.value);
     };
 
-    //---удаление---------------------------
+    // получаем id задачи и показываем модальное окно
     const confirmRemoveTask = (taskId: number) => {
       taskIdToDelete.value = taskId;
       confirmModal.value?.show();
     };
 
+    // удаление задачи
     const removeTask = async () => {
       if (taskIdToDelete.value !== null) {
         await deleteTask(taskIdToDelete.value, "/RemoveTask/");
@@ -86,7 +89,7 @@ export default defineComponent({
       taskIdToDelete.value = null;
     };
 
-    //---редактирование(500 ошибка)---------------------------
+    // редактирование задачи
     const editTask = async (updatedTask: Task) => {
       const responseTask = await updateTask(updatedTask, "/UpdateTask");
       const index = todos.value.findIndex(t => t.id === updatedTask.id);
@@ -95,8 +98,9 @@ export default defineComponent({
       }
     };
 
-    const openModal = () => {
-      modalStore.openModal(true);
+    // показываем модальное окно редактирования
+    const openMainModal = () => {
+      modalStore.openMainModal(true);
     };
 
     return {
@@ -104,13 +108,13 @@ export default defineComponent({
       taskIdToDelete,
       confirmModal,
       isModalOpen, 
-      isEditModal,
+      isEditModalOpen,
       createTask,
       editTask,
       removeTask,
       confirmRemoveTask,
       cancelRemoveTask,
-      openModal,
+      openMainModal,
     };
   },
 });

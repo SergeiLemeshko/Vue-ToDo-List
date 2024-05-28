@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { Task } from "../store/useTodoListStore";
 
 export interface Category {
   id: number;
@@ -9,8 +10,9 @@ export interface Category {
 
 export const useCategorieListStore = defineStore("categorieList", () => {
   
-    const BASE_URL = ref("http://localhost:8089/api/ToDoList");
+    const BASE_URL = ref<string>("http://localhost:8089/api/ToDoList");
 
+    // получение категорий
     const fetchCategorie = async (path: string): Promise<Category[]> => {
       const response = await fetch(`${BASE_URL.value + path}`);
       if (!response.ok) {
@@ -19,6 +21,7 @@ export const useCategorieListStore = defineStore("categorieList", () => {
       return response.json();
     };
     
+    // добавление категорий
     const addCategorie = async (newCategory: Omit<Category, 'id'>, path: string): Promise<Category> => {
       const response = await fetch(`${BASE_URL.value + path}`, {
         method: 'POST',
@@ -34,6 +37,7 @@ export const useCategorieListStore = defineStore("categorieList", () => {
       return response.json();
     };
     
+    // обновление категорий
     const updateCategorie = async (updatedCategory: Category, path: string): Promise<Category> => {
       const response = await fetch(`${BASE_URL.value + path}`, {
         method: 'POST',
@@ -49,6 +53,7 @@ export const useCategorieListStore = defineStore("categorieList", () => {
       return response.json();
     };
     
+    // удаление категорий
     const deleteCategorie = async (categoryId: number,  path: string): Promise<void> => {
       const response = await fetch(`${BASE_URL.value + path}${categoryId}`, {
         method: 'GET'
@@ -58,5 +63,16 @@ export const useCategorieListStore = defineStore("categorieList", () => {
       }
     };
 
-    return { BASE_URL, fetchCategorie, addCategorie, updateCategorie, deleteCategorie }
+    // отображает на странице задач категории, привязанные к каждой задаче
+    const displayCategories = (todos: Task[], categories: Category[]): void => {
+      todos.forEach(todo => {
+        const category = categories.find(c => c.id === todo.categoryId);
+        if (category) {
+          todo.categoryName = category.name;
+          todos.sort((a, b) => a.id - b.id);
+        } else todo.categoryName = '';
+      });
+    };
+
+    return { BASE_URL, fetchCategorie, addCategorie, updateCategorie, deleteCategorie, displayCategories }
 });

@@ -1,6 +1,5 @@
 <template>
   <div class="todo">
-    <h1>TODOS</h1>
     <TodoList/>
   </div>
 </template>

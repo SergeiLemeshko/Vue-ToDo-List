@@ -7,41 +7,41 @@
       <router-link to="/" :class="{'active-link': !currentBtn}">Категории</router-link>
     </nav>
     <div class="header-btns">
-      <button-add v-if="currentBtn" :onClick="openModal">Добавить задачу</button-add>
-      <!-- openModal нужно будет поменять на ф-ю для категорий -->
-      <button-add v-else :onClick="openModal">Добавить категорию</button-add>
+      <button-main v-if="currentBtn" :onClick="openMainModal">Добавить задачу</button-main>
+      <button-main v-else :onClick="openMainModal">Добавить категорию</button-main>
     </div>
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { storeToRefs } from 'pinia'
-import { useRoute } from 'vue-router'
-import ButtonAdd from '@/UI/ButtonAdd.vue';
-import { useModalTodoStore } from '../store/useModalTodoStore'
+import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
+import { useModalMainStore } from '../store/useModalMainStore';
+import ButtonMain from '@/UI/ButtonMain.vue';
 
 export default defineComponent({
   name: "HeaderSection",
   components: {
-    ButtonAdd,
+    ButtonMain,
   },
   setup() {
     const route = useRoute();
-    const modalStore = useModalTodoStore();
+    const modalStore = useModalMainStore();
     const { isModalOpen } = storeToRefs(modalStore);
 
-    const openModal = () => {
-      modalStore.openModal(isModalOpen.value);
+    // показываем модальное окно добавления задачи/категории
+    const openMainModal = () => {
+      modalStore.openMainModal(isModalOpen.value);
     }
 
-    //для отображения кнопок Добавить задачу/Добавить категорию
+    // для отображения кнопок добавить задачу/категорию
     const currentBtn = computed(() => route.path === "/todo");
 
     return { 
       currentBtn,
       isModalOpen,
-      openModal,
+      openMainModal,
     }
   },
 });
