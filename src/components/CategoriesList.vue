@@ -1,11 +1,19 @@
 <template>
   <div>
     <ul>
-      <li v-for="cat in categories" :key="cat.id">
+      <!-- <li v-for="cat in categories" :key="cat.id">
         <div class="test">{{ "Название: " + cat.name }};  {{ "Описание: " + cat.description }}</div> 
         <button @click="confirmRemoveCategorie(cat.id)">Удалить</button>
         <button @click="openMainModal()">Редактировать</button>
-      </li>
+      </li> -->
+      <TodoItem 
+        v-for="cat in categories" 
+        :key="cat.id" 
+        :item="cat"
+        :isTodoPage="false"
+        :confirmRemoveItem="confirmRemoveCategorie" 
+        :openMainModal="openMainModal"
+      />
     </ul>
     <ModalDelete
       ref="confirmModal"
@@ -34,6 +42,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useCategorieListStore, Category } from "../store/useCategorieListStore";
 import { useModalMainStore } from '../store/useModalMainStore';
+import TodoItem from "@/components/TodoItem.vue";
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalMain from '@/UI/ModalMain.vue';
 
@@ -42,6 +51,7 @@ export default defineComponent({
   components: {
     ModalDelete,
     ModalMain,
+    TodoItem,
   },
   setup() {
     const store = useCategorieListStore();
@@ -84,7 +94,7 @@ export default defineComponent({
 
       // редактирование категории
       const editCategory = async (updatedCategory: Category) => {
-      const responseCategory = await updateCategorie(updatedCategory, "/categories");
+      const responseCategory = await updateCategorie(updatedCategory, "/UpdateCategory");
       const index = categories.value.findIndex(cat => cat.id === updatedCategory.id);
       if (index !== -1) {
         categories.value[index] = responseCategory;

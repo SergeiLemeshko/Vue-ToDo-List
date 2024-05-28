@@ -1,11 +1,19 @@
 <template>
-  <div>
+  <div class="todo-list">
     <ul>
-      <li v-for="todo in todos" :key="todo.id">
+      <!-- <li v-for="todo in todos" :key="todo.id">
         <div class="test">{{ "Название: " + todo.name }};  {{ "Описание: " + todo.description }};  {{ "Категория: " + todo.categoryName }}</div> 
         <button @click="confirmRemoveTask(todo.id)">Удалить</button>
         <button @click="openMainModal()">Редактировать</button>
-      </li>
+      </li> -->
+      <TodoItem 
+        v-for="todo in todos" 
+        :key="todo.id" 
+        :item="todo"
+        :isTodoPage="true"
+        :confirmRemoveItem="confirmRemoveTask" 
+        :openMainModal="openMainModal"
+      />
     </ul>
     <ModalDelete
       ref="confirmModal"
@@ -35,6 +43,7 @@ import { storeToRefs } from 'pinia';
 import { useTodoListStore, Task } from "../store/useTodoListStore";
 import { useModalMainStore } from '../store/useModalMainStore';
 import { useCategorieListStore, Category } from "../store/useCategorieListStore";
+import TodoItem from "@/components/TodoItem.vue";
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalMain from '@/UI/ModalMain.vue';
 
@@ -43,6 +52,7 @@ export default defineComponent({
   components: {
     ModalDelete,
     ModalMain,
+    TodoItem,
   },
   setup() {
     const store = useTodoListStore();
@@ -121,11 +131,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.test {
-  color: rgb(255, 247, 247)
-}
-
-.test2 {
-  color: rgb(141, 45, 45);
+.todo-list {
+  // display: flex;
+  // align-items: center;
+  // margin: 0 auto;
 }
 </style>

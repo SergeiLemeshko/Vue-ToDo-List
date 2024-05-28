@@ -49,27 +49,29 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .header {
+  // position: fixed;
   display: flex;
   height: 88px;
   width: 100%;
   background-color: #3F72AF;
-}
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.19), 0 5px 6px rgba(0, 0, 0, 0.23);
 
-.header-logo {
-  font-size: 36px;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  margin-left: 25px;
-  color: #FFFFFF;
-}
+  &-logo {
+    font-size: 36px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    margin-left: 25px;
+    color: #FFFFFF;
+  }
 
-.header-nav {
-  display: flex;
-  align-items: center;
-  margin-left: 65px;
-  font-size: 24px;
-  font-weight: 400;
+  &-nav {
+    display: flex;
+    align-items: center;
+    margin-left: 65px;
+    font-size: 24px;
+    font-weight: 400;
+  }
 }
 
 .header-divider {
@@ -88,8 +90,23 @@ a {
   color: #DBE2EF;
 }
 
+/* состояние при переключении кнопок Задачи/Категории */
 .active-link {
   color: #8FB6FF;
+  position: relative;
+  display: inline-block;
+}
+
+/* состояние линии подчеркивания при переключении кнопок Задачи/Категории */
+.active-link::after {
+  content: "";
+  position: absolute;
+  top: 25px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background-color: #8FB6FF;
 }
 
 .header-btns {
