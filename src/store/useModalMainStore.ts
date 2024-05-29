@@ -9,6 +9,7 @@ export const useModalMainStore = defineStore('modalMain', () => {
   function openMainModal(val: boolean): void {
     if(val === isModalOpen.value) {
       isModalOpen.value = true;
+      document.body.classList.add('no-overflow');
     } else isEditModalOpen.value = true;
   }
 
@@ -16,6 +17,7 @@ export const useModalMainStore = defineStore('modalMain', () => {
   function closeMainModal(): void {
     isModalOpen.value = false;
     isEditModalOpen.value = false;
+    document.body.classList.remove('no-overflow');
   } 
 
   return { isModalOpen, isEditModalOpen, openMainModal, closeMainModal };

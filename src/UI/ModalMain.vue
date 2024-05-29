@@ -125,7 +125,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss">
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -136,6 +136,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
 }
 
 .modal-content {
@@ -147,5 +148,9 @@ export default defineComponent({
 
 .is-invalid {
   border-color: #dc3545;
+}
+
+.no-overflow {
+  overflow: hidden;
 }
 </style>

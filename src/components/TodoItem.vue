@@ -1,6 +1,6 @@
 <template>
   <li class="wrapper">
-    <section v-if="isTodoPage" class="todo">
+    <section v-if="isTodoPage">
       <div class="todo-top">
         <p v-if="item.name" class="todo-top__name">{{ item.name }}</p>
         <div class="todo-top__container">
@@ -64,7 +64,14 @@ export default defineComponent({
   padding: 10px 16px;
   margin: 0 auto;
   border-bottom: 2px solid #3F72AF;
+  transition: background-color 0.3s ease;
 }
+
+/* Стили для выделения при наведении */
+.wrapper:hover {
+  background-color: rgba(37, 127, 234, 0.2);
+}
+
 .todo-top {
   display: flex;
   margin-bottom: 8px;

@@ -2,9 +2,9 @@
   <section class="header">
     <h1 class="header-logo">ToDo List</h1>
     <nav class="header-nav">
-      <router-link to="/todo" :class="{'active-link': currentBtn}">Задачи</router-link>
+      <router-link to="/todo" :class="{'active-link': currentBtn, 'line': true}">Задачи</router-link>
       <div class="header-divider"></div>
-      <router-link to="/" :class="{'active-link': !currentBtn}">Категории</router-link>
+      <router-link to="/" :class="{'active-link': !currentBtn, 'line': true}">Категории</router-link>
     </nav>
     <div class="header-btns">
       <button-main v-if="currentBtn" :onClick="openMainModal">Добавить задачу</button-main>
@@ -47,12 +47,13 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .header {
-  // position: fixed;
+  position: fixed;
   display: flex;
   height: 88px;
   width: 100%;
+  z-index: 2;
   background-color: #3F72AF;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.19), 0 5px 6px rgba(0, 0, 0, 0.23);
 
@@ -90,23 +91,36 @@ a {
   color: #DBE2EF;
 }
 
+a:hover {
+	color: #FFFFFF;
+  transition: all .3s;
+}
+
 /* состояние при переключении кнопок Задачи/Категории */
 .active-link {
   color: #8FB6FF;
   position: relative;
   display: inline-block;
+  transition: all .3s;
 }
 
 /* состояние линии подчеркивания при переключении кнопок Задачи/Категории */
-.active-link::after {
-  content: "";
+.line {
+  position: relative;
+  text-decoration: none;
+}
+
+.line::after {
+  content: '';
   position: absolute;
   top: 25px;
   left: 0;
   bottom: 0;
   width: 100%;
   height: 1.5px;
-  background-color: #8FB6FF;
+  background-color: currentColor;
+  bottom: -2px;
+  left: 0;
 }
 
 .header-btns {
