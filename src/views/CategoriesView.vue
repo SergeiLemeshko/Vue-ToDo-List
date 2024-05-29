@@ -19,7 +19,6 @@ export default defineComponent({
 <style scooped lang="scss">
 .categories {
   position: relative;
-  top: 90px;
-  z-index: 1;
+  flex-grow: 1;
 }
 </style>

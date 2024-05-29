@@ -1,6 +1,7 @@
 <template>
   <div v-if="isModalOpen || isEditModalOpen" class="modal-overlay">
     <div class="modal-content">
+      <ButtonClose :onClick="closeThisModal"></ButtonClose>
       <h3>{{ title }}</h3>
       <form @submit.prevent="submitForm">
         <div>
@@ -26,8 +27,8 @@
             </option>
           </select>
         </div>
-        <button type="submit">{{ nameBtn }}</button>
-        <button type="button" @click="closeThisModal">Закрыть</button>
+        <ButtonMain type="submit" size="medium" color="blue">{{ nameBtn }}</ButtonMain>
+        <ButtonMain size="small" color="white" :onClick="closeThisModal">Закрыть</ButtonMain>
       </form>
     </div>
   </div>
@@ -35,6 +36,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, PropType } from 'vue';
+import ButtonClose from '@/UI/ButtonClose.vue';
+import ButtonMain from '@/UI/ButtonMain.vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useModalMainStore } from '../store/useModalMainStore';
@@ -43,6 +46,10 @@ import { useTodoListStore } from "../store/useTodoListStore";
 
 export default defineComponent({
   name: 'ModalMain',
+  components: {
+    ButtonClose,
+    ButtonMain,
+  },
   props: {
     title: {
       type: String,

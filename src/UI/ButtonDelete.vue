@@ -16,7 +16,7 @@ export default defineComponent({
   emits: ['remove'],
   setup(props, { emit }) {
     const handleClick = () => {
-      emit('remove', props.itemId)
+      emit('remove', props.itemId);
     }
 
     return { handleClick }

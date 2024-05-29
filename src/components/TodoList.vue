@@ -1,11 +1,6 @@
 <template>
   <div class="todo-list">
     <ul>
-      <!-- <li v-for="todo in todos" :key="todo.id">
-        <div class="test">{{ "Название: " + todo.name }};  {{ "Описание: " + todo.description }};  {{ "Категория: " + todo.categoryName }}</div> 
-        <button @click="confirmRemoveTask(todo.id)">Удалить</button>
-        <button @click="openMainModal()">Редактировать</button>
-      </li> -->
       <TodoItem 
         v-for="todo in todos" 
         :key="todo.id" 
@@ -132,8 +127,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .todo-list {
-  // display: flex;
-  // align-items: center;
-  // margin: 0 auto;
+
 }
 </style>

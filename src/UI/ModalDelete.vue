@@ -1,19 +1,27 @@
 <template>
   <div v-if="isVisible" class="modal-overlay">
     <div class="modal-content">
+      <ButtonClose :onClick="cancel"></ButtonClose>
       <h3>{{ title }}</h3>
       <p>{{ message }}</p>
-      <button @click="confirm">Да</button>
-      <button @click="cancel">Нет</button>
+      <ButtonMain size="small" color="blue" :onClick="confirm">Да</ButtonMain>
+      <ButtonMain size="small" color="white" :onClick="cancel">Нет</ButtonMain>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
+import { useBodyClass } from '@/composables/useBodyClass';
+import ButtonClose from '@/UI/ButtonClose.vue';
+import ButtonMain from '@/UI/ButtonMain.vue';
 
 export default defineComponent({
   name: 'ModalDelete',
+  components: {
+    ButtonClose,
+    ButtonMain,
+  },
   props: {
     title: {
       type: String,
@@ -52,6 +60,9 @@ export default defineComponent({
       props.onCancel();
       hide();
     };
+
+    // предотвращает возможность взаимодействия со списком под модальным окном
+    useBodyClass(isVisible);
 
     return {
       isVisible,

@@ -7,8 +7,8 @@
       <router-link to="/" :class="{'active-link': !currentBtn, 'line': true}">Категории</router-link>
     </nav>
     <div class="header-btns">
-      <button-main v-if="currentBtn" :onClick="openMainModal">Добавить задачу</button-main>
-      <button-main v-else :onClick="openMainModal">Добавить категорию</button-main>
+      <button-add v-if="currentBtn" :onClick="openMainModal">Добавить задачу</button-add>
+      <button-add v-else :onClick="openMainModal">Добавить категорию</button-add>
     </div>
   </section>
 </template>
@@ -18,12 +18,12 @@ import { defineComponent, computed } from "vue";
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useModalMainStore } from '../store/useModalMainStore';
-import ButtonMain from '@/UI/ButtonMain.vue';
+import ButtonAdd from '@/UI/ButtonAdd.vue';
 
 export default defineComponent({
   name: "HeaderSection",
   components: {
-    ButtonMain,
+    ButtonAdd,
   },
   setup() {
     const route = useRoute();
@@ -49,7 +49,8 @@ export default defineComponent({
 
 <style lang="scss">
 .header {
-  position: fixed;
+  position: sticky;
+  top: 0;
   display: flex;
   height: 88px;
   width: 100%;

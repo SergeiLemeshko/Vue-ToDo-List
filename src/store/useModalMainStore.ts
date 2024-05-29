@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useBodyClass } from '@/composables/useBodyClass';
 
 export const useModalMainStore = defineStore('modalMain', () => {
   const isModalOpen = ref<boolean>(false);
@@ -9,7 +10,6 @@ export const useModalMainStore = defineStore('modalMain', () => {
   function openMainModal(val: boolean): void {
     if(val === isModalOpen.value) {
       isModalOpen.value = true;
-      document.body.classList.add('no-overflow');
     } else isEditModalOpen.value = true;
   }
 
@@ -17,8 +17,10 @@ export const useModalMainStore = defineStore('modalMain', () => {
   function closeMainModal(): void {
     isModalOpen.value = false;
     isEditModalOpen.value = false;
-    document.body.classList.remove('no-overflow');
   } 
+
+  // предотвращает возможность взаимодействия со списком под модальным окном
+  useBodyClass(isModalOpen);
 
   return { isModalOpen, isEditModalOpen, openMainModal, closeMainModal };
 });

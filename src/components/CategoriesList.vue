@@ -1,11 +1,6 @@
 <template>
   <div>
     <ul>
-      <!-- <li v-for="cat in categories" :key="cat.id">
-        <div class="test">{{ "Название: " + cat.name }};  {{ "Описание: " + cat.description }}</div> 
-        <button @click="confirmRemoveCategorie(cat.id)">Удалить</button>
-        <button @click="openMainModal()">Редактировать</button>
-      </li> -->
       <TodoItem 
         v-for="cat in categories" 
         :key="cat.id" 
@@ -127,11 +122,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.test {
-  color: rgb(255, 247, 247)
-}
 
-.test2 {
-  color: rgb(141, 45, 45);
-}
 </style>

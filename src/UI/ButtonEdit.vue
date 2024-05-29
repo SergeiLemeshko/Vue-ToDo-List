@@ -4,9 +4,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
+import { useModalMainStore } from '../store/useModalMainStore';
+import { storeToRefs } from 'pinia';
+import { useBodyClass } from '@/composables/useBodyClass';
 
 export default defineComponent({
-  name: 'EditIcon',
+  name: 'ButtonEdit',
   props: {
     openMainModal: {
       type: Function as PropType<() => void>,
@@ -14,11 +17,17 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const handleClick = () => {
-      props.openMainModal()
-    }
+    const modalStore = useModalMainStore();
+    const { isEditModalOpen } = storeToRefs(modalStore);
 
-    return { handleClick }
+    const handleClick = () => {
+      props.openMainModal();
+    };
+
+    // предотвращает возможность взаимодействия со списком под модальным окном
+    useBodyClass(isEditModalOpen);
+
+    return { handleClick, isEditModalOpen }
   }
 })
 </script>
