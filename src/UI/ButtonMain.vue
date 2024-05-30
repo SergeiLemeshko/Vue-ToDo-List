@@ -67,15 +67,18 @@ export default defineComponent({
   .btn-small {
     height: 46px;
     width: 120px;
-    padding: 4px 4px;
-    font-size: 12px;
+    font-size: 18px;
+    border: 2px solid #3F72AF;
+    border-radius: 4px;
+    margin-left: 24px;
   }
 
   .btn-medium {
     height: 46px;
     width: 200px;
-    padding: 4px 4px;
-    font-size: 14px;
+    border-radius: 4px;
+    font-size: 18px;
+    letter-spacing: 0.6px;
   }
 
   .btn-blue {

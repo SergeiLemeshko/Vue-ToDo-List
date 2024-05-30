@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
-import { useBodyClass } from '@/composables/useBodyClass';
+import { useBodyClass } from '@/composables/useComposables';
 import ButtonClose from '@/UI/ButtonClose.vue';
 import ButtonMain from '@/UI/ButtonMain.vue';
 

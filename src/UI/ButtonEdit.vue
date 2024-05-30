@@ -6,7 +6,7 @@
 import { defineComponent, PropType } from 'vue'
 import { useModalMainStore } from '../store/useModalMainStore';
 import { storeToRefs } from 'pinia';
-import { useBodyClass } from '@/composables/useBodyClass';
+import { useBodyClass } from '@/composables/useComposables';
 
 export default defineComponent({
   name: 'ButtonEdit',

@@ -1,5 +1,5 @@
 <template>
-  <button class="close-button" @click="handleClick">✕</button>
+  <div class="close-button" @click="handleClick"></div>
 </template>
 
 <script lang="ts">
@@ -27,18 +27,11 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .close-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  font-weight: bold;
-  color: blue;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  background-image: url("../assets/close-btn.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-}
-
-.close-button:hover {
-  color: darkblue;
 }
 </style>
