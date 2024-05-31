@@ -37,4 +37,9 @@ export default defineComponent({
   color: #FFFFFF;
   cursor: pointer;
 }
+
+.btn-add:hover {
+  color: #8FB6FF;
+  transition: all .3s;
+}
 </style>

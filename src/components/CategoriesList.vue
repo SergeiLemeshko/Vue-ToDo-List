@@ -13,7 +13,7 @@
     <ModalDelete
       ref="confirmModal"
       title="Удаление категории"
-      message="Вы уверены, что хотите удалить эту категорию?"
+      :message="titleToDelete"
       :onConfirm="removeCategorie"
       :onCancel="cancelRemoveCategorie"
     />
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useCategorieListStore, Category } from "../store/useCategorieListStore";
 import { useModalMainStore } from '../store/useModalMainStore';
@@ -57,6 +57,7 @@ export default defineComponent({
     const categories = ref<Category[]>([]);
     const categorieIdToDelete = ref<number | null>(null);
     const confirmModal = ref<InstanceType<typeof ModalDelete> | null>(null);
+    const nameDeleteCategorie = ref<string>('');
 
     onMounted(async () => {
       categories.value = await fetchCategorie("/GetCategories");
@@ -71,6 +72,7 @@ export default defineComponent({
     // получаем id категории и показываем модальное окно
     const confirmRemoveCategorie = (categorieId: number) => {
       categorieIdToDelete.value = categorieId;
+      nameDeleteCategorie.value = categories.value.filter(с => с.id === categorieIdToDelete.value)[0].name;
       confirmModal.value?.show();
     };
 
@@ -101,11 +103,15 @@ export default defineComponent({
       modalStore.openMainModal(true);
     };
 
+    const titleToDelete = computed(() => `Вы уверены, что хотите удалить категорию “${nameDeleteCategorie.value}”?`);
+
     return { 
       isModalOpen,
       isEditModalOpen,
       categories,
       confirmModal,
+      nameDeleteCategorie,
+      titleToDelete,
       fetchCategorie, 
       updateCategorie, 
       addCategorie, 

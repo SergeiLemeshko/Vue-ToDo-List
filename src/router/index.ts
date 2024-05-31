@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import CategoriesView from '../views/CategoriesView.vue'
+import TodoView from '../views/TodoView.vue'
+
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'categories',
-    component: CategoriesView
+    name: 'todo',
+    component: TodoView
   },
   {
-    path: '/todo',
-    name: 'todo',
-    component: () => import('../views/TodoView.vue')
+    path: '/categories',
+    name: 'categories',
+    component: () => import('../views/CategoriesView.vue')
   }
 ]
 

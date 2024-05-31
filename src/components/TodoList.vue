@@ -13,7 +13,7 @@
     <ModalDelete
       ref="confirmModal"
       title="Удаление задачи"
-      message="Вы уверены, что хотите удалить эту задачу?"
+      :message="titleToDelete"
       :onConfirm="removeTask"
       :onCancel="cancelRemoveTask"
     />
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTodoListStore, Task } from "../store/useTodoListStore";
 import { useModalMainStore } from '../store/useModalMainStore';
@@ -61,6 +61,7 @@ export default defineComponent({
     const categories = ref<Category[]>([]);
     const taskIdToDelete = ref<number | null>(null);
     const confirmModal = ref<InstanceType<typeof ModalDelete> | null>(null);
+    const nameDeleteTodo = ref<string>('');
 
     onMounted(async () => {
       todos.value = await fetchTasks("/GetTasks");
@@ -78,6 +79,7 @@ export default defineComponent({
     // получаем id задачи и показываем модальное окно
     const confirmRemoveTask = (taskId: number) => {
       taskIdToDelete.value = taskId;
+      nameDeleteTodo.value = todos.value.filter(t => t.id === taskIdToDelete.value)[0].name;
       confirmModal.value?.show();
     };
 
@@ -108,12 +110,16 @@ export default defineComponent({
       modalStore.openMainModal(true);
     };
 
+    const titleToDelete = computed(() => `Вы уверены, что хотите удалить задачу “${nameDeleteTodo.value}”?`);
+
     return {
       todos,
       taskIdToDelete,
       confirmModal,
       isModalOpen, 
       isEditModalOpen,
+      titleToDelete,
+      nameDeleteTodo,
       createTask,
       editTask,
       removeTask,

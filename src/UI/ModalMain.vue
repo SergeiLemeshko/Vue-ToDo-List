@@ -130,14 +130,14 @@ export default defineComponent({
     };
 
     // для отображения или скрытия поля "Категория" в модальном окне
-    const currentPageTodo = computed(() => route.path === "/todo");
+    const currentPageTodo = computed(() => route.path !== "/categories");
 
     // валидация поля "Имя"
     const isNameValid = computed(() => name.value.length <= 255);
 
-    const namePlaceholder = computed(() => route.path === "/todo" ? "Введите имя задачи" : 'Введите имя категории');
+    const namePlaceholder = computed(() => route.path !== "/categories" ? "Введите имя задачи" : 'Введите имя категории');
 
-    const descriptionPlaceholder = computed(() => route.path === "/todo" ? "Введите описание задачи" : 'Введите описание категории');
+    const descriptionPlaceholder = computed(() => route.path !== "/categories" ? "Введите описание задачи" : 'Введите описание категории');
 
     // @mousedown вызывает toggleOpen, который добавляет/удаляет класс .open на элементе selecte
     const toggleOpen = (event: Event) => {
@@ -242,6 +242,16 @@ export default defineComponent({
 
       & input::placeholder {
         font-size: 20px;
+      }
+
+      & input:hover {
+        border: 2px solid #257FEA;
+        transition: all ease 0.3s;
+      }
+
+      & input:focus {
+        border: 2px solid #257FEA;
+        transition: all ease 0.3s;
       }
     }
 
@@ -358,7 +368,19 @@ export default defineComponent({
   }
 
   & select.open {
-    background-image: url('../assets/arrow-open.svg'); /* Перевернутая стрелочка */
+    background-image: url('../assets/arrow-open.svg') !important;  /* Перевернутая стрелочка */
+  }
+
+  & select:hover{
+    background-image: url('../assets/arrow-hover.svg');
+  }
+
+  & select:hover {
+    border: 2px solid #257FEA;
+  }
+
+  & select:focus {
+    border: 2px solid #257FEA;
   }
 }
 
@@ -386,6 +408,16 @@ export default defineComponent({
 
   & textarea::-webkit-resizer {
     display: none;
+  }
+
+  & textarea:hover {
+    border: 2px solid #257FEA;
+    transition: all ease 0.3s;
+  }
+
+  & textarea:focus {
+    border: 2px solid #257FEA;
+    transition: all ease 0.3s;
   }
 }
 

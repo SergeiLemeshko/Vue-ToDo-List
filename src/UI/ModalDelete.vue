@@ -1,11 +1,15 @@
 <template>
   <div v-if="isVisible" class="modal-overlay">
     <div class="modal-content">
-      <ButtonClose :onClick="cancel"></ButtonClose>
-      <h3>{{ title }}</h3>
-      <p>{{ message }}</p>
-      <ButtonMain size="small" color="blue" :onClick="confirm">Да</ButtonMain>
-      <ButtonMain size="small" color="white" :onClick="cancel">Нет</ButtonMain>
+      <div class="modal-content__header">
+        <h3>{{ title }}</h3>
+        <ButtonClose :onClick="cancel"></ButtonClose>
+      </div>
+      <p class="question">{{ message }}</p>
+      <div class="modal-content__buttons">
+        <ButtonMain size="small" color="blue" :onClick="confirm">Да</ButtonMain>
+        <ButtonMain size="small" color="white" :onClick="cancel">Нет</ButtonMain>
+      </div>
     </div>
   </div>
 </template>
@@ -75,7 +79,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -86,12 +90,38 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 3;
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
+  width: 600px;
+  height: 238px;
+  background: #DBE2EF;
+  border-radius: 4px;
+}
+
+.modal-content__header {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0px 39px 0px;
+
+  & h3 {
+    font-size: 40px;
+    font-weight: 500;
+    color: #3F72AF;
+  }
+}
+
+.question {
+  font-size: 20px;
+  text-align: left;
+  letter-spacing: normal;
+  letter-spacing: -0.8px;
+}
+
+.modal-content__buttons {
+  display: flex;
+  margin: 25px 0px 0px 0px;
+  justify-content: end;
 }
 </style>

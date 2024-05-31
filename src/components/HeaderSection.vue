@@ -2,9 +2,9 @@
   <section class="header">
     <h1 class="header-logo">ToDo List</h1>
     <nav class="header-nav">
-      <router-link to="/todo" :class="{'active-link': currentBtn, 'line': true}">Задачи</router-link>
+      <router-link to="/" :class="{'active-link': currentBtn, 'line': true}">Задачи</router-link>
       <div class="header-divider"></div>
-      <router-link to="/" :class="{'active-link': !currentBtn, 'line': true}">Категории</router-link>
+      <router-link to="/categories" :class="{'active-link': !currentBtn, 'line': true}">Категории</router-link>
     </nav>
     <div class="header-btns">
       <button-add v-if="currentBtn" :onClick="openMainModal">Добавить задачу</button-add>
@@ -36,7 +36,7 @@ export default defineComponent({
     }
 
     // для отображения кнопок добавить задачу/категорию
-    const currentBtn = computed(() => route.path === "/todo");
+    const currentBtn = computed(() => route.path !== "/categories");
 
     return { 
       currentBtn,

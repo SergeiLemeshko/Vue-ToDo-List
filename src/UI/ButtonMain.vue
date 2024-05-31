@@ -58,32 +58,29 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  button {
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
   .btn-small {
     height: 46px;
     width: 120px;
-    font-size: 18px;
+    font-size: 20px;
     border: 2px solid #3F72AF;
     border-radius: 4px;
     margin-left: 24px;
+    cursor: pointer;
   }
 
   .btn-medium {
     height: 46px;
     width: 200px;
     border-radius: 4px;
-    font-size: 18px;
+    font-size: 20px;
     letter-spacing: 0.6px;
+    cursor: pointer;
   }
 
   .btn-blue {
     background-color: #3F72AF;
     color: #FFFFFF;
+    border: none;
   }
 
   .btn-white {
@@ -91,7 +88,37 @@ export default defineComponent({
     color: #3F72AF;
   }
 
-  button:hover {
-    opacity: 0.9;
+  .btn-blue:hover {
+    background-color: #257FEA;
+    transition: all ease 0.3s;
+  }
+
+  .btn-blue:focus {
+    background-color: #257FEA;
+    transition: all ease 0.3s;
+  }
+
+  .btn-blue:active {
+    background-color: #65aaff9d;
+  }
+
+  
+  .btn-white:hover {
+    background-color: #257eea4f;
+    color: #257FEA;
+    border: 2px solid #257FEA;
+    transition: all ease 0.3s;
+  }
+
+  .btn-white:focus {
+    background-color: #257eea4f;
+    color: #257FEA;
+    border: 2px solid #257FEA;
+    transition: all ease 0.3s;
+  }
+
+  .btn-white:active {
+    background-color: #257FEA;
+    color: #FFFFFF;
   }
 </style>
