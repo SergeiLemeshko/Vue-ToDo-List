@@ -18,21 +18,12 @@
               :class="{ 'is-invalid': !isNameValid }"
             />
           </div>
-          <div v-if="currentPageTodo" class="modal-content__medium-categorie">
+          <div v-if="currentPageTodo">
             <span class="categorie-medium">Категория</span>
-            <select 
+            <CustomSelect 
               v-model="categoryId" 
-              id="category"
-              ref="currentSelect"
-              @mousedown="toggleOpen"
-              @blur="closeSelect" 
-              @change="closeSelect"
-            >
-              <option :value="null">Выберите категорию</option>
-              <option v-for="category in categories" :key="category.id" :value="category.id">
-                {{ category.name }}
-              </option>
-            </select>
+              :categories="categories" 
+            />
           </div>
         </div>
         <div class="modal-content__bottom">
@@ -54,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted, PropType, Ref } from 'vue';
+import { defineComponent, ref, computed, onMounted, PropType } from 'vue';
 import ButtonClose from '@/UI/ButtonClose.vue';
 import ButtonMain from '@/UI/ButtonMain.vue';
 import { useRoute } from 'vue-router';
@@ -62,13 +53,14 @@ import { storeToRefs } from 'pinia';
 import { useModalMainStore } from '../store/useModalMainStore';
 import { Category } from "../store/useCategorieListStore";
 import { useTodoListStore } from "../store/useTodoListStore";
-import { useSelectClass } from '@/composables/useComposables';
+import CustomSelect from "@/UI/CustomSelect.vue"
 
 export default defineComponent({
   name: 'ModalMain',
   components: {
     ButtonClose,
     ButtonMain,
+    CustomSelect,
   },
   props: {
     title: {
@@ -98,7 +90,6 @@ export default defineComponent({
     const categoryId = ref<number | null>(null);
     const categories = ref<Category[]>([]);
     const isOpenSelect = ref(false);
-    const currentSelect: Ref<HTMLSelectElement | null> = ref(null);
 
     onMounted(async () => {
       categories.value = await fetchTasks("/GetCategories");
@@ -157,8 +148,6 @@ export default defineComponent({
       isOpenSelect.value = false;
     };
 
-    useSelectClass(isOpenSelect, currentSelect);
-
     return {
       id,
       name,
@@ -170,7 +159,6 @@ export default defineComponent({
       isNameValid,
       currentPageTodo,
       isOpenSelect,
-      currentSelect,
       namePlaceholder,
       descriptionPlaceholder,
       submitForm,
@@ -324,11 +312,12 @@ export default defineComponent({
 .categorie-medium {
   position: relative;
   top: 11px;
-  right: 115px;
+  right: 113px;
   padding: 0px 3px 0px 2px;
   background-color: #DBE2EF;
   color: #3F72AF;
   font-size: 18px;
+  z-index: 1;
 }
 
 .description {
@@ -339,49 +328,6 @@ export default defineComponent({
   background-color: #DBE2EF;
   color: #3F72AF;
   font-size: 18px;
-}
-
-.modal-content__medium-categorie {
-
-  & select {
-    border: 2px solid #3F72AF;
-    border-radius: 4px;
-    max-width: 346px;
-    padding: 9px 10px 10px 9px;
-    height: 46px;
-    font-size: 20px;
-    // color: #00000085;
-    background-color: #DBE2EF;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
-    background-image: url('../assets/arrow.svg'); /* Стрелочка */
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 14px;
-    outline: none;
-  }
-
-  & select::-ms-expand {
-    display: none; /* Убираем стрелочку в IE */
-  }
-
-  & select.open {
-    background-image: url('../assets/arrow-open.svg') !important;  /* Перевернутая стрелочка */
-  }
-
-  & select:hover{
-    background-image: url('../assets/arrow-hover.svg');
-  }
-
-  & select:hover {
-    border: 2px solid #257FEA;
-  }
-
-  & select:focus {
-    border: 2px solid #257FEA;
-  }
 }
 
 .modal-content__bottom {

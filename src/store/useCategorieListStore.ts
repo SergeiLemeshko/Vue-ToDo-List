@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { Task } from "../store/useTodoListStore";
 
 export interface Category {
-  id: number;
+  id: number | null;
   name: string;
   description: string;
 }

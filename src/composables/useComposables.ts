@@ -11,11 +11,11 @@ export function useBodyClass(visible: Ref<boolean>) {
   });
 }
 
-// изменяет цвет текста в поле Категория в зависимости от того, открыт select или нет
-export function useSelectClass(isOpenSelect: Ref<boolean>, currentSelect: Ref<HTMLSelectElement | null>) {
+// изменяет цвет 'Выберите категорию' в поле Категория в зависимости от того, открыт select или нет
+export function useSelectClass(isOpenSelect: Ref<boolean>, currentSelect: Ref<HTMLDivElement | null>) {
   watchEffect(() => {
     if (!isOpenSelect.value && currentSelect.value) {
-      if (currentSelect.value.options[0].selected === true) {
+      if (currentSelect.value.textContent === 'Выберите категорию') {
         currentSelect.value.classList.add('text-categorie');
       }
     } else if (isOpenSelect.value && currentSelect.value) {
