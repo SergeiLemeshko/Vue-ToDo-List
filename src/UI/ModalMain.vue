@@ -8,15 +8,17 @@
       <form @submit.prevent="submitForm">
         <div class="modal-content__medium">
           <div :class="[currentPageTodo ? 'modal-content__medium-name' : 'modal-content__medium-cat']">
-            <span :class="[currentPageTodo ? 'name-todo' : 'name-cat']">Имя</span>
+            <span :class="[currentPageTodo ? 'name-todo' : 'name-cat', { 'is-invalid__name': isInvalidName }]">Имя</span>
             <input 
               v-model="name" 
               id="name" 
-              type="text" 
+              type="text"
               :placeholder="namePlaceholder"
+              @focus="validateNameField"
+              :class="{ 'is-invalid': isInvalidName }"
               required
-              :class="{ 'is-invalid': !isNameValid }"
             />
+            <p v-if="isInvalidName" class="modal-content__medium-required">Поле должно быть обязательным от 1 до 255 символов</p>
           </div>
           <div v-if="currentPageTodo">
             <span class="categorie-medium">Категория</span>
@@ -27,13 +29,16 @@
           </div>
         </div>
         <div class="modal-content__bottom">
-          <span class="description">Описание</span>
+          <span class="description" :class="{ 'is-invalid__name': isInvalidDesc }">Описание</span>
           <textarea 
             v-model="description" 
             id="description" 
             type="text" 
-            :placeholder="descriptionPlaceholder" 
+            :placeholder="descriptionPlaceholder"
+            @focus="validateDescriptionField"
+            :class="{ 'is-invalid': isInvalidDesc }" 
           />
+          <p v-if="isInvalidDesc" class="modal-content__bottom-desc">Описание должно быть менее {{ numOfCharacters }} символов</p>
         </div>
         <div class="modal-content__btns">
           <ButtonMain type="submit" size="medium" color="blue">{{ nameBtn }}</ButtonMain>
@@ -53,7 +58,8 @@ import { storeToRefs } from 'pinia';
 import { useModalMainStore } from '../store/useModalMainStore';
 import { Category } from "../store/useCategorieListStore";
 import { useTodoListStore } from "../store/useTodoListStore";
-import CustomSelect from "@/UI/CustomSelect.vue"
+import CustomSelect from "@/UI/CustomSelect.vue";
+import { useNameValidation, useDescriptionValidation } from '@/composables/useComposables';
 
 export default defineComponent({
   name: 'ModalMain',
@@ -89,7 +95,8 @@ export default defineComponent({
     const description = ref<string>('');
     const categoryId = ref<number | null>(null);
     const categories = ref<Category[]>([]);
-    const isOpenSelect = ref(false);
+    const { isInvalidName, validateName } = useNameValidation();
+    const { isInvalidDesc, validateDescription } = useDescriptionValidation();
 
     onMounted(async () => {
       categories.value = await fetchTasks("/GetCategories");
@@ -97,6 +104,11 @@ export default defineComponent({
 
     // отправка формы
     const submitForm = () => {
+      validateNameField();
+      validateDescription(description.value);
+      if (isInvalidName.value || isInvalidDesc.value) {
+        return;
+      }
       props.onSubmit({
         id: id.value || 0,
         name: name.value,
@@ -123,30 +135,20 @@ export default defineComponent({
     // для отображения или скрытия поля "Категория" в модальном окне
     const currentPageTodo = computed(() => route.path !== "/categories");
 
-    // валидация поля "Имя"
-    const isNameValid = computed(() => name.value.length <= 255);
-
     const namePlaceholder = computed(() => route.path !== "/categories" ? "Введите имя задачи" : 'Введите имя категории');
 
     const descriptionPlaceholder = computed(() => route.path !== "/categories" ? "Введите описание задачи" : 'Введите описание категории');
 
-    // @mousedown вызывает toggleOpen, который добавляет/удаляет класс .open на элементе selecte
-    const toggleOpen = (event: Event) => {
-      const selectElement = event.target as HTMLSelectElement;
-      if (!isOpenSelect.value) {
-        selectElement.classList.add('open');
-      } else {
-        selectElement.classList.remove('open');
-      }
-      isOpenSelect.value = !isOpenSelect.value;
+    // валидация поля "Имя"
+    const validateNameField = () => {
+      validateName(name.value);
+    };
+    // валидация поля "Описание"
+    const validateDescriptionField = () => {
+      validateDescription(description.value);
     };
 
-    // @blur и @change вызывает closeSelect, чтобы убрать класс open, когда элемент теряет фокус и когда выбираем опцию
-    const closeSelect = (event: Event) => {
-      const selectElement = event.target as HTMLSelectElement;
-      selectElement.classList.remove('open');
-      isOpenSelect.value = false;
-    };
+    const numOfCharacters = computed(() => route.path !== "/categories" ? "1536" : '512');
 
     return {
       id,
@@ -156,17 +158,20 @@ export default defineComponent({
       isModalOpen,
       isEditModalOpen,
       categories,
-      isNameValid,
       currentPageTodo,
-      isOpenSelect,
       namePlaceholder,
       descriptionPlaceholder,
+      isInvalidName,
+      isInvalidDesc,
+      numOfCharacters,
+      validateDescriptionField,
+      validateNameField,
       submitForm,
       closeMainModal,
       closeThisModal,
       clearFieldsModal,
-      toggleOpen,
-      closeSelect,
+      validateName,
+      validateDescription,
     };
   },
 });
@@ -213,6 +218,16 @@ export default defineComponent({
     justify-content: center;
     margin-bottom: 24px;
 
+    & input:hover {
+      border: 2px solid #257FEA;
+      transition: all ease 0.3s;
+    }
+
+    & input:focus {
+      border: 2px solid #257FEA;
+      transition: all ease 0.3s;
+    }
+
     &-name {
       margin-left: -7px;
       margin-right: 28px;
@@ -230,16 +245,6 @@ export default defineComponent({
 
       & input::placeholder {
         font-size: 20px;
-      }
-
-      & input:hover {
-        border: 2px solid #257FEA;
-        transition: all ease 0.3s;
-      }
-
-      & input:focus {
-        border: 2px solid #257FEA;
-        transition: all ease 0.3s;
       }
     }
 
@@ -378,10 +383,22 @@ export default defineComponent({
 }
 
 .is-invalid {
-  border-color: #dc3545;
+  border: 2px solid #EC1D1D !important;
+}
+
+.is-invalid__name {
+  color: #EC1D1D;
 }
 
 .no-overflow {
   overflow: hidden;
+}
+
+.modal-content__medium-required,
+.modal-content__bottom-desc {
+  position: absolute;
+  color: #EC1D1D;
+  margin-left: 15px;
+  font-size: 15px;
 }
 </style>

@@ -29,6 +29,7 @@
       nameBtn="Сохранить"
       :onSubmit="editTask"
     />
+    <SpinnerLoad :isLoading="isLoading" />
   </div>
 </template>
 
@@ -41,6 +42,7 @@ import { useCategorieListStore, Category } from "../store/useCategorieListStore"
 import TodoItem from "@/components/TodoItem.vue";
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalMain from '@/UI/ModalMain.vue';
+import SpinnerLoad from '@/UI/SpinnerLoad.vue';
 
 export default defineComponent({
   name: 'TodoList',
@@ -48,6 +50,7 @@ export default defineComponent({
     ModalDelete,
     ModalMain,
     TodoItem,
+    SpinnerLoad,
   },
   setup() {
     const store = useTodoListStore();
@@ -56,6 +59,7 @@ export default defineComponent({
     const { fetchTasks, updateTask, addTask, deleteTask } = store;
     const { displayCategories } = storeCategorie;
     const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
+    const isLoading = ref<boolean>(false);
 
     const todos = ref<Task[]>([]);
     const categories = ref<Category[]>([]);
@@ -64,7 +68,13 @@ export default defineComponent({
     const nameDeleteTodo = ref<string>('');
 
     onMounted(async () => {
+      isLoading.value = true;
       todos.value = await fetchTasks("/GetTasks");
+        if(todos.value) {
+          setTimeout(function() {
+          isLoading.value = false;
+        }, 500);
+      }
       categories.value = await fetchTasks("/GetCategories");
       displayCategories(todos.value, categories.value);
     });
@@ -120,6 +130,7 @@ export default defineComponent({
       isEditModalOpen,
       titleToDelete,
       nameDeleteTodo,
+      isLoading,
       createTask,
       editTask,
       removeTask,

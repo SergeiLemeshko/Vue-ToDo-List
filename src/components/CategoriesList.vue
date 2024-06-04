@@ -30,6 +30,7 @@
       :onSubmit="editCategory"
     />
   </div>
+  <SpinnerLoad :isLoading="isLoading" />
 </template>
 
 <script lang="ts">
@@ -40,6 +41,7 @@ import { useModalMainStore } from '../store/useModalMainStore';
 import TodoItem from "@/components/TodoItem.vue";
 import ModalDelete from '@/UI/ModalDelete.vue';
 import ModalMain from '@/UI/ModalMain.vue';
+import SpinnerLoad from '@/UI/SpinnerLoad.vue';
 
 export default defineComponent({
   name: "CategoriesList",
@@ -47,6 +49,7 @@ export default defineComponent({
     ModalDelete,
     ModalMain,
     TodoItem,
+    SpinnerLoad,
   },
   setup() {
     const store = useCategorieListStore();
@@ -58,9 +61,16 @@ export default defineComponent({
     const categorieIdToDelete = ref<number | null>(null);
     const confirmModal = ref<InstanceType<typeof ModalDelete> | null>(null);
     const nameDeleteCategorie = ref<string>('');
+    const isLoading = ref<boolean>(false);
 
     onMounted(async () => {
+      isLoading.value = true;
       categories.value = await fetchCategorie("/GetCategories");
+        if(categories.value) {
+          setTimeout(function() {
+          isLoading.value = false;
+        }, 500);
+      }
     });
 
     // создание категории
@@ -112,6 +122,7 @@ export default defineComponent({
       confirmModal,
       nameDeleteCategorie,
       titleToDelete,
+      isLoading,
       fetchCategorie, 
       updateCategorie, 
       addCategorie, 
