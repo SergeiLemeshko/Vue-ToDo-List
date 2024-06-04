@@ -1,7 +1,6 @@
 import { watch, Ref, watchEffect, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-
 // watcher, который предотвращает возможность взаимодействия со списком под модальным окном
 export function useBodyClass(visible: Ref<boolean>) {
   watch(visible, (newVal) => {

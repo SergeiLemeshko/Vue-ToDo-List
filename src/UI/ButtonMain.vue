@@ -101,7 +101,6 @@ export default defineComponent({
   .btn-blue:active {
     background-color: #65aaff9d;
   }
-
   
   .btn-white:hover {
     background-color: #257eea4f;

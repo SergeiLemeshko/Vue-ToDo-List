@@ -35,14 +35,14 @@ export default defineComponent({
     TooltipText,
   },
   props: {
-  modelValue: {
-    type: [Number, null] as PropType<number | null>,
-    required: true,
-  },
-  categories: {
-    type: Array as PropType<Category[]>,
-    required: true,
-  }
+    modelValue: {
+      type: [Number, null] as PropType<number | null>,
+      required: true,
+    },
+    categories: {
+      type: Array as PropType<Category[]>,
+      required: true,
+    }
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
@@ -51,7 +51,7 @@ export default defineComponent({
     // cсылка на DOM-элемент выпадающего списка
     const selectRef = ref<HTMLDivElement | null>(null);
 
-    // храненит выбранное значение выпадающего списка
+    // хранит выбранное значение выпадающего списка
     const selectedValue = computed({
       get: () => props.modelValue,
       set: (value) => emit('update:modelValue', value),
@@ -93,7 +93,7 @@ export default defineComponent({
       }
     };
 
-     // добавляет "Выберите категорию" в начало списка категорий
+    // добавляет "Выберите категорию" в начало списка категорий
     const categoriesWithDefault = computed(() => [
       { id: null, name: 'Выберите категорию', description: '' },
       ...props.categories
@@ -110,7 +110,6 @@ export default defineComponent({
     });
 
     useSelectClass(isOpenSelect, selectRef);
-
 
     return {
       isOpenSelect,

@@ -55,7 +55,8 @@ export default defineComponent({
 
 .spinner {
   display: flex;
-  gap: 10px;
+  gap: 5px;
+  margin-top: -15px;
 }
 
 .point {

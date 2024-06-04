@@ -51,15 +51,15 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, PropType } from 'vue';
-import ButtonClose from '@/UI/ButtonClose.vue';
-import ButtonMain from '@/UI/ButtonMain.vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useModalMainStore } from '../store/useModalMainStore';
 import { Category } from "../store/useCategorieListStore";
 import { useTodoListStore } from "../store/useTodoListStore";
-import CustomSelect from "@/UI/CustomSelect.vue";
 import { useNameValidation, useDescriptionValidation } from '@/composables/useComposables';
+import CustomSelect from "@/UI/CustomSelect.vue";
+import ButtonClose from '@/UI/ButtonClose.vue';
+import ButtonMain from '@/UI/ButtonMain.vue';
 
 export default defineComponent({
   name: 'ModalMain',
@@ -354,8 +354,8 @@ export default defineComponent({
   }
 
   & textarea::placeholder {
-        font-size: 20px;
-      }
+    font-size: 20px;
+  }
 
   & textarea::-webkit-resizer {
     display: none;

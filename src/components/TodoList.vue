@@ -29,8 +29,8 @@
       nameBtn="Сохранить"
       :onSubmit="editTask"
     />
-    <SpinnerLoad :isLoading="isLoading" />
   </div>
+  <SpinnerLoad :isLoading="isLoading" />
 </template>
 
 <script lang="ts">
@@ -141,9 +141,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped lang="scss">
-.todo-list {
-
-}
-</style>
