@@ -5,7 +5,11 @@
         <h3>{{ title }}</h3>
         <ButtonClose :onClick="cancel"></ButtonClose>
       </div>
-      <p class="question">{{ message }}</p>
+      <div class="question">
+        <TooltipText :text="message" :isMedium="true">
+          <p>{{ message }}</p>
+        </TooltipText>
+      </div>
       <div class="modal-content__buttons">
         <ButtonMain size="small" color="blue" :onClick="confirm">Да</ButtonMain>
         <ButtonMain size="small" color="white" :onClick="cancel">Нет</ButtonMain>
@@ -19,12 +23,14 @@ import { defineComponent, ref, PropType } from 'vue';
 import { useBodyClass } from '@/composables/useComposables';
 import ButtonClose from '@/UI/ButtonClose.vue';
 import ButtonMain from '@/UI/ButtonMain.vue';
+import TooltipText from '@/UI/TooltipText.vue';
 
 export default defineComponent({
   name: 'ModalDelete',
   components: {
     ButtonClose,
     ButtonMain,
+    TooltipText,
   },
   props: {
     title: {
@@ -116,7 +122,7 @@ export default defineComponent({
   font-size: 20px;
   text-align: left;
   letter-spacing: normal;
-  letter-spacing: -0.8px;
+  letter-spacing: -1.1px;
 }
 
 .modal-content__buttons {

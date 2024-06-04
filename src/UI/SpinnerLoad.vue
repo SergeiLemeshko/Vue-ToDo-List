@@ -5,7 +5,7 @@
         v-for="n in pointsCount" 
         :key="n" 
         class="point" 
-        :style="pointStyle(n)"
+        :style="pointStyle()"
       ></div>
     </div>
   </div>
@@ -71,7 +71,7 @@ export default defineComponent({
 }
 
 .point:nth-child(6) {
-  margin-right: 17px;
+  margin-right: 20px;
 }
 
 @keyframes bounce {

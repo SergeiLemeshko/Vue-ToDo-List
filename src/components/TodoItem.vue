@@ -2,18 +2,38 @@
   <li class="wrapper">
     <section v-if="isTodoPage">
       <div class="todo-top">
-        <p v-if="item.name" class="todo-top__name">{{ item.name }}</p>
+        <div v-if="item.name" class="todo-top__name">
+          <TooltipText :text="item.name" :isShort="true">
+            <p>{{ item.name }}</p>
+          </TooltipText>
+        </div>
         <div class="todo-top__container">
           <div v-if="item.categoryName" class="todo-top__folder"></div>
-          <span v-if="item.categoryName">{{ item.categoryName }}</span>
+          <div v-if="item.categoryName" class="todo-top__container-cat">
+            <TooltipText :text="item.categoryName" :isShort="true">
+              <span>{{ item.categoryName }}</span>
+            </TooltipText>
+          </div>
         </div>
       </div>
-      <p v-if="item.description" class="todo-description">{{ item.description }}</p>
+      <div v-if="item.description" class="todo-description">
+        <TooltipText :text="item.description">
+          <p>{{ item.description }}</p>
+        </TooltipText>
+      </div>
     </section>
     <section v-if="!isTodoPage" class="categorie">
       <div class="categorie-container">
-        <span v-if="item.name" class="categorie-container__name">{{ item.name }}</span>
-        <span v-if="item.description" class="categorie-container__description">{{ item.description }}</span>
+        <div v-if="item.name" class="categorie-container__name">
+          <TooltipText :text="item.name">
+            <span>{{ item.name }}</span>
+          </TooltipText>
+        </div>
+        <div v-if="item.description" class="categorie-container__description">
+          <TooltipText :text="item.description">
+            <span>{{ item.description }}</span>
+          </TooltipText>
+        </div>
       </div>
     </section>
     <section class="todo-btns">
@@ -27,12 +47,14 @@
 import { defineComponent, PropType } from 'vue';
 import ButtonDelete from '@/UI/ButtonDelete.vue';
 import ButtonEdit from '@/UI/ButtonEdit.vue';
+import TooltipText from '@/UI/TooltipText.vue';
 
 export default defineComponent({
   name: 'TodoItem',
   components: {
     ButtonDelete,
     ButtonEdit,
+    TooltipText,
   },
   props: {
     item: {
@@ -61,7 +83,7 @@ export default defineComponent({
   max-width: 1000px;
   align-items: center;
   justify-content: center;
-  padding: 10px 16px;
+  padding: 15px 16px;
   margin: 0 auto;
   border-bottom: 2px solid #3F72AF;
   transition: background-color 0.3s ease;
@@ -80,13 +102,6 @@ export default defineComponent({
     display: flex;
     align-items: flex-start;
     justify-content: center;
-
-    & span {
-      font-size: 18px;
-      line-height: 21px;
-      color: #3F72AF;
-      margin-left: 2px
-    }
   }
 
   &__name {
@@ -104,6 +119,13 @@ export default defineComponent({
     height: 18px;
     margin-left: 22px;
   }
+}
+
+.todo-top__container-cat {
+  font-size: 18px;
+  line-height: 21px;
+  color: #3F72AF;
+  margin-left: 2px
 }
 
 .todo-description {

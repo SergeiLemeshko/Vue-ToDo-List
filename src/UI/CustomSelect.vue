@@ -4,7 +4,9 @@
     ref="selectRef" 
     @click="toggleOpen" 
   >
-    <div class="selected-value">{{ selectedCategory ? selectedCategory.name : 'Выберите категорию' }}</div>
+    <div class="selected-value">
+      <TooltipText :text="selectedCategory ? selectedCategory.name : 'Выберите категорию'" :isShortCat="true" />
+    </div>
     <div v-if="isOpenSelect" class="options">
       <div 
         class="option" 
@@ -13,7 +15,9 @@
         :class="{ 'selected': category.id === selectedValue }" 
         @click="selectCategory(category)"
       >
-        {{ category.name }}
+        <TooltipText :text="category.name" :isShortCat="true">
+          <span>{{ category.name }}</span>
+        </TooltipText>
       </div>
     </div>
   </div>
@@ -23,9 +27,13 @@
 import { defineComponent, ref, PropType, computed, onMounted, onBeforeUnmount } from 'vue';
 import { Category } from "../store/useCategorieListStore";
 import { useSelectClass } from '@/composables/useComposables';
+import TooltipText from '@/UI/TooltipText.vue';
 
 export default defineComponent({
   name: 'CustomSelect',
+  components: {
+    TooltipText,
+  },
   props: {
   modelValue: {
     type: [Number, null] as PropType<number | null>,
