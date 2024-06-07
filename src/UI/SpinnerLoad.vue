@@ -25,7 +25,12 @@ export default defineComponent({
   setup() {
     const pointsCount = ref<number>(9); // Количество точек
 
-    const pointStyle = () => {
+    type PointStyle = {
+      animationDelay: string;
+      animationDuration: string;
+    };
+
+    const pointStyle = (): PointStyle => {
       const delay = `${Math.random() * 0.6}s`; // случайная задержка
       const duration = `${0.5 + Math.random() * 0.6}s`; // случайная продолжительность
 

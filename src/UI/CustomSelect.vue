@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, computed, onMounted, onBeforeUnmount } from 'vue';
-import { Category } from "../store/useCategorieListStore";
+import { Category } from "../store/useMethodsStore";
 import { useSelectClass } from '@/composables/useComposables';
 import TooltipText from '@/UI/TooltipText.vue';
 
@@ -95,7 +95,7 @@ export default defineComponent({
 
     // добавляет "Выберите категорию" в начало списка категорий
     const categoriesWithDefault = computed(() => [
-      { id: null, name: 'Выберите категорию', description: '' },
+      { id: -1, name: 'Выберите категорию', description: '' },
       ...props.categories
     ]);
 

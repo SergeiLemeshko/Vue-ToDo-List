@@ -36,7 +36,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useCategorieListStore, Category } from "../store/useCategorieListStore";
+import { useMethodsStore, Category } from "../store/useMethodsStore";
 import { useModalMainStore } from '../store/useModalMainStore';
 import TodoItem from "@/components/TodoItem.vue";
 import ModalDelete from '@/UI/ModalDelete.vue';
@@ -52,9 +52,9 @@ export default defineComponent({
     SpinnerLoad,
   },
   setup() {
-    const store = useCategorieListStore();
+    const store = useMethodsStore();
     const modalStore = useModalMainStore();
-    const { fetchCategorie, updateCategorie, addCategorie, deleteCategorie } = store;
+    const { fetchData, addElem, updateElem, deleteElem } = store;
     const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
 
     const categories = ref<Category[]>([]);
@@ -65,7 +65,7 @@ export default defineComponent({
 
     onMounted(async () => {
       isLoading.value = true;
-      categories.value = await fetchCategorie("/GetCategories");
+      categories.value = await fetchData<Category[]>("/GetCategories");
         if(categories.value) {
           setTimeout(function() {
           isLoading.value = false;
@@ -75,9 +75,13 @@ export default defineComponent({
 
     // создание категории
     const createCategorie = async (newCategorie: Omit<Category, 'id'>) => {
-      const addedCategorie = await addCategorie(newCategorie, "/AddCategory");
-      categories.value.push(addedCategorie);
-    };
+      try {
+        const addedCategorie = await addElem<Category>(newCategorie, "/AddCategory");
+          categories.value.push(addedCategorie);
+        } catch (error) {
+          console.error("Ошибка при создании категории:", error);
+        }
+      };
 
     // получаем id категории и показываем модальное окно
     const confirmRemoveCategorie = (categorieId: number) => {
@@ -89,7 +93,7 @@ export default defineComponent({
     // удаление категории
     const removeCategorie = async () => {
       if (categorieIdToDelete.value !== null) {
-        await deleteCategorie(categorieIdToDelete.value, "/RemoveCategory/");
+        await deleteElem<Category>(categorieIdToDelete.value, "/RemoveCategory/");
         categories.value = categories.value.filter(cat => cat.id !== categorieIdToDelete.value);
         categorieIdToDelete.value = null;
       }
@@ -99,10 +103,10 @@ export default defineComponent({
       categorieIdToDelete.value = null;
     };
 
-      // редактирование категории
-      const editCategory = async (updatedCategory: Category) => {
-      const responseCategory = await updateCategorie(updatedCategory, "/UpdateCategory");
-      const index = categories.value.findIndex(cat => cat.id === updatedCategory.id);
+    // редактирование категории
+    const editCategory = async (updatedCategory: Category) => {
+      const responseCategory = await updateElem<Category>(updatedCategory, "/UpdateCategory");
+      const index = categories.value.findIndex(c => c.id === updatedCategory.id);
       if (index !== -1) {
         categories.value[index] = responseCategory;
       }
@@ -123,10 +127,6 @@ export default defineComponent({
       nameDeleteCategorie,
       titleToDelete,
       isLoading,
-      fetchCategorie, 
-      updateCategorie, 
-      addCategorie, 
-      deleteCategorie,
       createCategorie,
       confirmRemoveCategorie,
       removeCategorie,

@@ -54,8 +54,7 @@ import { defineComponent, ref, computed, onMounted, PropType } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useModalMainStore } from '../store/useModalMainStore';
-import { Category } from "../store/useCategorieListStore";
-import { useTodoListStore } from "../store/useTodoListStore";
+import { useMethodsStore, Category } from "../store/useMethodsStore";
 import { useNameValidation, useDescriptionValidation } from '@/composables/useComposables';
 import CustomSelect from "@/UI/CustomSelect.vue";
 import ButtonClose from '@/UI/ButtonClose.vue';
@@ -84,9 +83,9 @@ export default defineComponent({
   },
   setup(props) {
     const route = useRoute();
-    const store = useTodoListStore();
+    const store = useMethodsStore();
     const modalStore = useModalMainStore();
-    const { fetchTasks } = store;
+    const { fetchData } = store;
     const { closeMainModal } = modalStore;
     const { isModalOpen, isEditModalOpen } = storeToRefs(modalStore);
 
@@ -99,7 +98,7 @@ export default defineComponent({
     const { isInvalidDesc, validateDescription } = useDescriptionValidation();
 
     onMounted(async () => {
-      categories.value = await fetchTasks("/GetCategories");
+      categories.value = await fetchData<Category[]>("/GetCategories");
     });
 
     // отправка формы
@@ -120,13 +119,13 @@ export default defineComponent({
     };
 
     // закрываем модальное окно и чистим его поля
-    const closeThisModal = () => {
+    const closeThisModal = (): void => {
       closeMainModal();
       clearFieldsModal();
     };
 
     // чистит поля модального окна
-    const clearFieldsModal = () => {
+    const clearFieldsModal = (): void => {
       name.value = '',
       description.value = '',
       categoryId.value = null;
@@ -140,11 +139,11 @@ export default defineComponent({
     const descriptionPlaceholder = computed(() => route.path !== "/categories" ? "Введите описание задачи" : 'Введите описание категории');
 
     // валидация поля "Имя"
-    const validateNameField = () => {
+    const validateNameField = (): void => {
       validateName(name.value);
     };
     // валидация поля "Описание"
-    const validateDescriptionField = () => {
+    const validateDescriptionField = (): void => {
       validateDescription(description.value);
     };
 
