@@ -2,7 +2,7 @@
   <div>
     <ul>
       <TodoItem 
-        v-for="cat in categories" 
+        v-for="cat in categories"  
         :key="cat.id" 
         :item="cat"
         :isTodoPage="false"
